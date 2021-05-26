@@ -1,70 +1,87 @@
 <!DOCTYPE html>
 <html>
-<head lang="en">
-    <meta charset="UTF-8">
+  <head lang="en">
+    <meta charset="UTF-8" />
     <title>CAS FEE - Zoo / Vorlage</title>
 
     <script src="js/utils.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js" defer></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"
+      defer
+    ></script>
 
-    <link rel="icon" href="./images/icon-document.png" type="image/png">
-    <link rel="stylesheet" type="text/css" href="./stylesheets/documentStyle.css">
-    <link rel="stylesheet" type="text/css" href="./stylesheets/style.css" >
+    <link rel="icon" href="./images/icon-document.png" type="image/png" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="./stylesheets/documentStyle.css"
+    />
+    <link rel="stylesheet" type="text/css" href="./stylesheets/style.css" />
 
     <!--
         TODO: Step 1
         - Refactor file structure and define a single file per object/factory method.
         - Use kebab-case for file naming, e.g. for class FoodService use food-service.js .
     -->
-    <script src="js/data.js" defer></script>
-    <script src="js/services.js" defer></script>
-    <script src="js/zoo-controller.js" defer></script>
+
+    <script src="js/services/data/food-storage.js" defer></script>
+    <script src="js/services/animal-service.js" defer></script>
+    <script src="js/services/animal.js" defer></script>
+    <script src="js/services/food-service.js" defer></script>
+    <script src="js/services/food.js" defer></script>
+    <script src="js/services/lion.js" defer></script>
+    <script src="js/services/panda.js" defer></script>
+    <script src="js/controllers/zoo-controller.js" defer></script>
 
     <script id="food-list-template" type="text/x-handlebars-template">
-    <header>
-        <h1>Food Storage</h1>
-    </header>
-    {{#each food}}
-        <div>
-            <span>{{name}} [amount: {{amount}}]</span>
-            <input type="button" value="Order" data-food-id="{{id}}" {{#if isOrderPending}}disabled{{/if}}>
-        </div>
-    {{/each}}
+      <header>
+          <h1>Food Storage</h1>
+      </header>
+      {{#each food}}
+          <div>
+              <span>{{name}} [amount: {{amount}}]</span>
+              <input type="button" value="Order" data-food-id="{{id}}" {{#if isOrderPending}}disabled{{/if}}>
+          </div>
+      {{/each}}
     </script>
-    
+
     <script id="animal-list-template" type="text/x-handlebars-template">
-    <header>
+      <header>
         <h1>Animals</h1>
-    </header>
-    {{#each animals}}
+      </header>
+      {{#each animals}}
         <div>
-            <span>{{this}}</span>
-            {{#if foodRequired}}
-            <input type="button" value="Feed" data-animal-id="{{id}}">
-            {{/if}}
+          <span>{{this}}</span>
+          {{#if foodRequired}}
+            <input type='button' value='Feed' data-animal-id='{{id}}' />
+          {{/if}}
         </div>
-    {{/each}}
-    {{#unless animals.length}}
+      {{/each}}
+      {{#unless animals.length}}
         No animal found.
-    {{/unless}}
+      {{/unless}}
     </script>
-</head>
-<body>
-    <section class="card" id="food-container">
-    </section>
-    <section class="card" id="animal-container">
-    </section>
+  </head>
+  <body>
+    <section class="card" id="food-container"></section>
+    <section class="card" id="animal-container"></section>
     <section class="card">
-        <header>
-            <h1>Animal Management</h1>
-        </header>
-        <form id="new-animal-form">
-            <label>Animal name:
-                <input id="new-animal-name" placeholder="Type Name here..." minlength="3" required>
-            </label>
-            <button type="submit" data-action="addPanda">Create Panda</button>
-            <button type="submit" data-action="addLion">Create Lion</button>
-        </form>    
+      <header>
+        <h1>Animal Management</h1>
+      </header>
+      <form id="new-animal-form">
+        <label
+          >Animal name:
+          <input
+            id="new-animal-name"
+            placeholder="Type Name here..."
+            minlength="3"
+            required
+          />
+        </label>
+        <button type="submit" data-action="addPanda">Create Panda</button>
+        <button type="submit" data-action="addLion">Create Lion</button>
+      </form>
     </section>
-</body>
+  </body>
 </html>

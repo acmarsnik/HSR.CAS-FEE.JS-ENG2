@@ -11,18 +11,21 @@
 //  - Create class FoodStorage; use 'new FoodStorage()' instead of 'createStorage()'.
 // TODO: Step 3
 //  - Use ES2015 module syntax: Export class FoodStorage.
-function createStorage() {
-    const food = JSON.parse(localStorage.getItem('foodStorage_v1') || "[ ]");
-    localStorage.setItem('foodStorage_v1', JSON.stringify(food));
+class FoodStorage {
+  constructor() {
+    const foodString = localStorage.getItem('foodStorage_v1');
+    const food = JSON.parse(foodString || '[ ]');
+    localStorage.setItem('foodStorage_v1', foodString);
 
     return {
-        food,
-        getAll() {
-            return food;
-        },
-        update(food) {
-            localStorage.setItem('foodStorage_v1', JSON.stringify(food));
-            return food;
-        }
+      food,
+      getAll() {
+        return food;
+      },
+      update(food) {
+        localStorage.setItem('foodStorage_v1', foodString);
+        return food;
+      },
     };
+  }
 }
