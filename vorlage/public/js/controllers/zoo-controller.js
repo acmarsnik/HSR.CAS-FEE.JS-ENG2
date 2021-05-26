@@ -8,82 +8,89 @@
 // TODO: Step 3
 //  - Import required dependencies by using ES2015 module syntax.
 
-const foodTemplateCompiled = Handlebars.compile(
-  document.getElementById('food-list-template').innerHTML,
-);
-const animalTemplateCompiled = Handlebars.compile(
-  document.getElementById('animal-list-template').innerHTML,
-);
-
-const newAnimalName = document.getElementById('new-animal-name');
-const newAnimalForm = document.getElementById('new-animal-form');
-const animalContainer = document.getElementById('animal-container');
-const foodContainer = document.getElementById('food-container');
-
-function showAnimals() {
-  animalContainer.innerHTML = animalTemplateCompiled(
-    { animals: animalService.animals },
-    { allowProtoPropertiesByDefault: true },
+class ZooController {
+  animalService;
+  foodTemplateCompiled = Handlebars.compile(
+    document.getElementById('food-list-template').innerHTML,
   );
-}
-
-function showFood() {
-  foodContainer.innerHTML = foodTemplateCompiled(
-    { food: foodService.food },
-    { allowProtoPropertiesByDefault: true },
+  animalTemplateCompiled = Handlebars.compile(
+    document.getElementById('animal-list-template').innerHTML,
   );
-}
 
-function initEventHandlers() {
-  foodContainer.addEventListener('click', (event) => {
-    const foodId = Number(event.target.dataset.foodId);
+  newAnimalName = document.getElementById('new-animal-name');
+  newAnimalForm = document.getElementById('new-animal-form');
+  animalContainer = document.getElementById('animal-container');
+  foodContainer = document.getElementById('food-container');
 
-    if (!isNaN(foodId)) {
-      event.target.setAttribute('disabled', true);
+  constructor(animalsService) {
+    this.animalService = animalsService;
+  }
 
-      foodService.orderFoodById(foodId);
-      showFood();
-      event.target.removeAttribute('disabled');
-    }
-  });
+  showAnimals() {
+    this.animalContainer.innerHTML = this.animalTemplateCompiled(
+      { animals: this.animalService.animals },
+      { allowProtoPropertiesByDefault: true },
+    );
+  }
 
-  animalContainer.addEventListener('click', (event) => {
-    const animalId = Number(event.target.dataset.animalId);
+  showFood() {
+    this.foodContainer.innerHTML = this.foodTemplateCompiled(
+      { food: foodService.food },
+      { allowProtoPropertiesByDefault: true },
+    );
+  }
 
-    if (!isNaN(animalId)) {
-      const feedingSucceeded = animalService.animals[animalId].feed(
-        { food: foodService.food, animals: animalService.animals },
-        () => renderZooView(),
-      );
+  initEventHandlers() {
+    this.foodContainer.addEventListener('click', (event) => {
+      const foodId = Number(event.target.dataset.foodId);
 
-      if (feedingSucceeded) {
-        renderZooView();
-      } else {
-        event.target.value = 'Feed (No foood!)';
+      if (!isNaN(foodId)) {
+        event.target.setAttribute('disabled', true);
+
+        foodService.orderFoodById(foodId);
+        this.showFood();
+        event.target.removeAttribute('disabled');
       }
-    }
-  });
+    });
 
-  newAnimalForm.addEventListener('submit', (event) => {
-    const createAction = document.activeElement.dataset.action;
-    if (document.activeElement && animalService[createAction]) {
-      animalService[createAction](newAnimalName.value);
-      showAnimals();
-    }
-    event.preventDefault();
-  });
+    this.animalContainer.addEventListener('click', (event) => {
+      const animalId = Number(event.target.dataset.animalId);
+
+      if (!isNaN(animalId)) {
+        const feedingSucceeded = this.animalService.animals[animalId].feed(
+          { food: foodService.food, animals: this.animalService.animals },
+          () => this.renderZooView(),
+        );
+
+        if (feedingSucceeded) {
+          this.renderZooView();
+        } else {
+          event.target.value = 'Feed (No foood!)';
+        }
+      }
+    });
+
+    this.newAnimalForm.addEventListener('submit', (event) => {
+      const createAction = document.activeElement.dataset.action;
+      if (document.activeElement && this.animalService[createAction]) {
+        this.animalService[createAction](this.newAnimalName.value);
+        this.showAnimals();
+      }
+      event.preventDefault();
+    });
+  }
+
+  renderZooView() {
+    this.showAnimals();
+    this.showFood();
+  }
+
+  // initialize UI
+  initialize() {
+    this.initEventHandlers();
+    foodService.loadData();
+    this.renderZooView();
+  }
 }
 
-function renderZooView() {
-  showAnimals();
-  showFood();
-}
-
-// initialize UI
-function initialize() {
-  initEventHandlers();
-  foodService.loadData();
-  renderZooView();
-}
-
-initialize();
+new ZooController(new AnimalService()).initialize();
